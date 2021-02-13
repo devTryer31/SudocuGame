@@ -8,7 +8,7 @@
 int main() {
 	//first_seeds_generate(5);
 	Game game;
-	game.build_field(3u, 45u);
+	game.build_field(3u, 70u);
 	game.loope();
 
 	//Field f2(3), f3(3), f4(4);
