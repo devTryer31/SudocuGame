@@ -28,7 +28,7 @@ public:
 		return data_[difficult];
 	}
 
-//For serialization
+//For boost serialization.
 private:
 	friend class boost::serialization::access;
 
@@ -38,6 +38,11 @@ private:
 	}
 
 private:
+	//There are two difficulties: 3 and 4 cells in one block dimension. 
+	//All difficulties have 3 percent rating: 
+	//			30, 45 and 75 % deleted cells in field.
+	//And then for all of this positions 
+	//					we will generate seeds for future sudocu building.
 	std::map<uint8_t, std::map<uint8_t, std::forward_list<int>>> data_;
 };
 
@@ -50,10 +55,16 @@ public:
 
 	void build_field(uint8_t difficult, uint8_t percent_to_delete );
 	void loope();
+	
+
 
 private:
 	void print_field(uint8_t i_idx, uint8_t j_idx);
 	bool process_enter_button();
+	
+	enum class MENUOPT : uint8_t { Continue = 0, Change, Exit };
+	MENUOPT menu();
+	
 
 private:
 	Field::_field current_field_;
@@ -62,11 +73,6 @@ private:
 	uint8_t i_pos = 0, j_pos = 0,
 		error_count = 0;
 
-	//There are two difficulties: 3 and 4 cells in one block dimantion. 
-	//All difficulties have 3 percent rating: 
-	//			30, 45 and 75 % deleted cells in field.
-	//And then for all of this positions 
-	//					we will generate seeds for future sudocu building.
 	Synchronized<SerializebleSeeds> seeds_;
 };
 

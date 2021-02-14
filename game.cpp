@@ -154,9 +154,56 @@ bool Game::process_enter_button() {
 	return true;
 }
 
+Game::MENUOPT Game::menu() {
+	uint8_t pos = 0;
+	const char* pos_s[]  { 
+R"(
+|========MENU========|
+|     <Continue>     |
+|    Change  game    |
+|        Exit        |
+|====================|)",
+R"(
+|========MENU========|
+|      Continue      |
+|   <Change  game>   |
+|        Exit        |
+|====================|)",
+R"(
+|========MENU========|
+|      Continue      |
+|    Change  game    |
+|       <Exit>       |
+|====================|)"};
+
+
+	std::cout << pos_s[0];
+
+	bool is_in_menu = true;
+	while (is_in_menu) {
+		switch (_getch()) {
+		case 72://up
+			if (pos != 0)
+				--pos;
+			break;
+		case 80://down
+			if (pos != 2)
+				++pos;
+			break;
+		case 13://enter
+			return MENUOPT(pos);
+		}
+		std::system("cls");
+		std::cout << pos_s[pos];
+	}
+
+	return {};
+}
+
+
 void Game::loope() {
 	bool is_in_game = true;
-
+	MENUOPT menu_returning;
 
 	while (is_in_game) {
 		//std::cout << current_solved_field_ << std::endl << std::endl;
@@ -184,7 +231,19 @@ void Game::loope() {
 				is_in_game = process_enter_button();
 			break;
 		case 27://escape
-			is_in_game = false;
+			std::system("cls");
+			menu_returning = menu();
+
+			switch (menu_returning) {
+			case MENUOPT::Exit:
+				is_in_game = false;
+				break;
+			case MENUOPT::Change:
+				break;
+			case MENUOPT::Continue:
+				break;
+			}
+
 			break;
 		}
 
